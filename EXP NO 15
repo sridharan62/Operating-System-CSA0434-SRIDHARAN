@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <string.h>
+
+struct user
+{
+    char uname[20];
+    char fname[20][20];
+    int fcount;
+};
+
+int main()
+{
+    struct user u[10];
+    int i, j, n, choice;
+    char uname[20], fname[20];
+
+    printf("Enter number of users: ");
+    scanf("%d", &n);
+
+    // Input user names
+    for(i = 0; i < n; i++)
+    {
+        printf("Enter username %d: ", i+1);
+        scanf("%s", u[i].uname);
+        u[i].fcount = 0;
+    }
+
+    while(1)
+    {
+        printf("\nTwo Level Directory\n");
+        printf("1. Create File\n");
+        printf("2. Display Files\n");
+        printf("3. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice)
+        {
+        case 1:
+            printf("Enter username: ");
+            scanf("%s", uname);
+
+            for(i = 0; i < n; i++)
+            {
+                if(strcmp(u[i].uname, uname) == 0)
+                {
+                    printf("Enter filename: ");
+                    scanf("%s", fname);
+
+                    strcpy(u[i].fname[u[i].fcount], fname);
+                    u[i].fcount++;
+
+                    printf("File created successfully\n");
+                    break;
+                }
+            }
+            break;
+
+        case 2:
+            printf("\nDirectory Structure\n");
+
+            for(i = 0; i < n; i++)
+            {
+                printf("\nUser: %s\n", u[i].uname);
+
+                for(j = 0; j < u[i].fcount; j++)
+                {
+                    printf("  %s\n", u[i].fname[j]);
+                }
+            }
+            break;
+
+        case 3:
+            return 0;
+
+        default:
+            printf("Invalid choice\n");
+        }
+    }
+
+    return 0;
+}
