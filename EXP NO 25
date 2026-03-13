@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
+int main()
+{
+    int fd;
+    struct stat fileStat;
+    DIR *d;
+    struct dirent *dir;
+
+    // Open or create file
+    fd = open("sample.txt", O_CREAT | O_RDWR, 0777);
+
+    if(fd < 0)
+    {
+        printf("File open error\n");
+        return 1;
+    }
+
+    // Write data into file
+    write(fd, "Hello UNIX System Calls", 24);
+
+    // Move file pointer using lseek
+    lseek(fd, 0, SEEK_SET);
+
+    // Get file information using stat
+    stat("sample.txt", &fileStat);
+
+    printf("File Size: %ld bytes\n", fileStat.st_size);
+    printf("Number of Links: %ld\n", fileStat.st_nlink);
+
+    // Use fcntl to get file descriptor flags
+    int flags = fcntl(fd, F_GETFL);
+    printf("File Descriptor Flags: %d\n", flags);
+
+    close(fd);
+
+    // Open current directory
+    d = opendir(".");
+
+    printf("\nFiles in current directory:\n");
+
+    while((dir = readdir(d)) != NULL)
+    {
+        printf("%s\n", dir->d_name);
+    }
+
+    closedir(d);
+
+    return 0;
+}
