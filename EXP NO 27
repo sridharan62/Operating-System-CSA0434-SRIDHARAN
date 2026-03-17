@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <dirent.h>
+#include <sys/stat.h>
+
+int main() {
+    DIR *dir;
+    struct dirent *entry;
+    struct stat fileStat;
+
+    dir = opendir(".");
+
+    if (dir == NULL) {
+        printf("Error: Unable to open directory\n");
+        return 1;
+    }
+
+    printf("Name\t\tType\tSize (bytes)\n");
+    printf("----------------------------------------\n");
+
+    while ((entry = readdir(dir)) != NULL) {
+        
+        // Skip hidden files (like . and ..)
+        if (entry->d_name[0] == '.')
+            continue;
+
+        // Get file information
+        if (stat(entry->d_name, &fileStat) == 0) {
+
+            // Check if directory or file
+            if (S_ISDIR(fileStat.st_mode))
+                printf("%-15s\tDIR\t%ld\n", entry->d_name, fileStat.st_size);
+            else
+                printf("%-15s\tFILE\t%ld\n", entry->d_name, fileStat.st_size);
+        }
+    }
+
+    closedir(dir);
+    return 0;
+}
