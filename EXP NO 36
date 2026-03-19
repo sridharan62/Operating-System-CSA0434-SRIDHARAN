@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct block {
+    int block_no;
+    struct block *next;
+};
+
+int main() {
+    int n, i, b;
+    
+    printf("Enter number of files: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        int blocks;
+
+        printf("\nEnter number of blocks for file %d: ", i + 1);
+        scanf("%d", &blocks);
+
+        struct block *start = NULL, *temp = NULL, *newBlock;
+
+        printf("Enter block numbers:\n");
+
+        for (int j = 0; j < blocks; j++) {
+            scanf("%d", &b);
+
+            newBlock = (struct block *)malloc(sizeof(struct block));
+            newBlock->block_no = b;
+            newBlock->next = NULL;
+
+            if (start == NULL) {
+                start = newBlock;
+                temp = start;
+            } else {
+                temp->next = newBlock;
+                temp = newBlock;
+            }
+        }
+
+        // Display file allocation
+        printf("File %d allocation: ", i + 1);
+
+        temp = start;
+        while (temp != NULL) {
+            printf("%d -> ", temp->block_no);
+            temp = temp->next;
+        }
+        printf("NULL\n");
+    }
+
+    return 0;
+}
